@@ -10,10 +10,17 @@ namespace eSignUITest.Pages
     class BasePage
     {
         protected IWebDriver _driver;
+        protected string _title;
 
-        public BasePage(IWebDriver driver)
+        public BasePage(IWebDriver driver, string title)
         {
             _driver = driver;
+            _title = title;
+
+            if (!_title.Equals(driver.Title))
+            {
+                //throw new Exception("This is not the " + _title); //Exception in constructor????
+            }
         }
     }
 }

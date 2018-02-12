@@ -10,19 +10,13 @@ namespace eSignUITest.Pages
 {
     class LoginPage : BasePage
     {
-        string title = "Login Page";
-
         By loginLocator = By.Id("login-input");
         By passwordLocator = By.Id("password-input");
         By submitButtonLocator = By.Id("BSign");
         By validationMessageLocator = By.Id("SysMessageLabel");
 
-        public LoginPage(IWebDriver driver) : base (driver)
+        public LoginPage(IWebDriver driver) : base (driver, "Login Page")
         {
-            if (!title.Equals(driver.Title))
-            {
-                throw new Exception("This is not the login page"); //Exception in constructor????
-            }
         }
 
         public LoginPage TypeLogin(string login)
@@ -43,7 +37,7 @@ namespace eSignUITest.Pages
         public BasePage SubmitForm()
         {
             _driver.FindElement(submitButtonLocator).Submit();
-            return new BasePage(_driver);
+            return new BasePage(_driver, "");
         }
 
         public LoginPage SubmitFormExpectedFailure()

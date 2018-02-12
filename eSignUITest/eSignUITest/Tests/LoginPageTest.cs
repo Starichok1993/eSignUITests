@@ -10,7 +10,7 @@ using eSignUITest.Pages;
 
 namespace eSignUITest
 {
-        public class LoginPageTest
+    public class LoginPageTest
     {
         IWebDriver driver;
 
@@ -29,6 +29,10 @@ namespace eSignUITest
 
             var loginPage = new LoginPage(driver);
             loginPage.LogInExpectingFailure("blabla", "asdfasd");
+            Assert.AreEqual("Not Valid User.", loginPage.GetValidationMessage());
+            loginPage.LogInExpectingFailure(" Admin ", "111");
+            Assert.AreEqual("Not Valid User.", loginPage.GetValidationMessage());
+            loginPage.LogInExpectingFailure("", "");
             Assert.AreEqual("Not Valid User.", loginPage.GetValidationMessage());
 
             loginPage.LogInAs("Admin", "111");

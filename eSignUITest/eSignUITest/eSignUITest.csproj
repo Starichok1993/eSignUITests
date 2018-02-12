@@ -63,8 +63,10 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="LoginPageTest.cs" />
+    <Compile Include="Tests\LoadTest.cs" />
+    <Compile Include="Tests\LoginPageTest.cs" />
     <Compile Include="Pages\BasePage.cs" />
+    <Compile Include="Pages\CallCenter.cs" />
     <Compile Include="Pages\LoginPage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
