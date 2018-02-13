@@ -34,6 +34,11 @@ namespace eSignUITest.Tests
             loginPage.LogInAs("call", "111");
             driver.Navigate().GoToUrl(caseURI); //go to case
 
+            var lockByOtherUserOkBtn = driver.FindElement(By.XPath("/html/body/div[1]/div[3]/div/button[1]/span"));
+            if (lockByOtherUserOkBtn.Displayed)
+            {
+                lockByOtherUserOkBtn.Click();
+            }
             driver.FindElement(By.Id("btnYes")).Click();
             driver.FindElement(By.Id("btnSTage1")).Click();
             driver.FindElement(By.Id("btnNext")).Click();

@@ -1,9 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.40629.0
+# Visual Studio 15
+VisualStudioVersion = 15.0.27130.2010
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "eSignUITest", "eSignUITest\eSignUITest.csproj", "{11996A07-2044-4E7A-8B7E-32824950842C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LoadTestProject", "LoadTestProject\LoadTestProject.csproj", "{BAD95C37-3598-43EE-B6BE-CDDEB28D5214}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,8 +17,15 @@ Global
 		{11996A07-2044-4E7A-8B7E-32824950842C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{11996A07-2044-4E7A-8B7E-32824950842C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{11996A07-2044-4E7A-8B7E-32824950842C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BAD95C37-3598-43EE-B6BE-CDDEB28D5214}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BAD95C37-3598-43EE-B6BE-CDDEB28D5214}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BAD95C37-3598-43EE-B6BE-CDDEB28D5214}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BAD95C37-3598-43EE-B6BE-CDDEB28D5214}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {8A3865BC-F9BD-4DF7-B33C-12FE67ED3EF3}
 	EndGlobalSection
 EndGlobal

@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace eSignUITest.Pages
 {
-    class LoginPage : BasePage
+    public class LoginPage : BasePage
     {
         By loginLocator = By.Id("login-input");
         By passwordLocator = By.Id("password-input");

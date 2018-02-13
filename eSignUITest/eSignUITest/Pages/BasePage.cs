@@ -7,7 +7,7 @@ using OpenQA.Selenium;
 
 namespace eSignUITest.Pages
 {
-    class BasePage
+    public class BasePage
     {
         protected IWebDriver _driver;
         protected string _title;
