@@ -7,99 +7,45 @@ using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Support.UI;
 using eSignUITest.Pages;
+using LoadTestProject;
 
 namespace eSignUITest.Tests
 {
-    class WizardLoadTestClass
+    public class WizardLoadTestClass : BaseTestClass
     {
-        IWebDriver driver;
-
-        string caseURI = "http://applicintweb.com/NWM_ExamOne_B2/App/ESignConfirmationPage?AskSSN=true&AppID=7f6c5933-632e-4284-b233-bb08172d125c";
-        //"http://applicintweb.com/Sammons_B2/CallCenter/Instructions?AskSSN=true&AppID=bfaf9101-b75a-44da-a4dc-86d199c37984";
-
-        string loginPageURI = "http://applicintweb.com/NWM_ExamOne_B2";
-            //"http://applicintweb.com/sammons_b2";
-
-        TimeSpan minLoadRequestTime = new TimeSpan(0, 1, 0);
-        TimeSpan maxLoadRequestTime = new TimeSpan();
-        DateTime maxLoadRequestDateTime = new DateTime();
-
-        public async Task<bool> RunTestAsync()
+        private string CaseURI
         {
-            Initialize();
-            try
+            get
             {
-                TestFunction();
-                return true;
+                return StartPageUrl + StartInterviewURI + CaseGUID;
             }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.Message);
-                return false;
-            }
-            finally
-            {
-                EndTest();
-            }
-        }        
-
-        public void RunTest()
-        {
-            Initialize();
-            try
-            {
-                TestFunction();
-                //return true;
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.Message);
-                //return false;
-            }
-            finally
-            {
-                EndTest();
-            }
-        }
-        
-        protected void Initialize()
-        {
-            driver = new ChromeDriver();
-            driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(10); // set implicit waits
+            set
+            { }
         }
 
-        protected void TestFunction()
+        public string StartInterviewURI { set; get; }
+        public string CaseGUID { set; get; }
+
+
+        TimeSpan testDuration = new TimeSpan(0,5,0);
+
+        protected override void TestFunction()
         {
             try
             {
-                driver.Navigate().GoToUrl(loginPageURI); //go to login page
+                DateTime startDate = DateTime.Now;
+
+                driver.Navigate().GoToUrl(StartPageUrl); //go to login page
 
                 var loginPage = new LoginPage(driver);
+                
                 //loginPage.LogInAs("call", "111");
-                loginPage.LogInAs("examiner", "test");
-                driver.Navigate().GoToUrl(caseURI); //go to case
+                loginPage.LogInAs("examiner", "test"); //login as examiner
+
+                driver.Navigate().GoToUrl(CaseURI); //go to case
 
                 /*Script for call Sammons*/
-                //driver.FindElement(By.Id("btnYes")).Click();
-                //try
-                //{
-                //    driver.FindElement(By.XPath("/html/body/div[1]/div[3]/div/button[1]/span")).Click();
-                //}
-                //catch (NoSuchElementException e)
-                //{
-                //    Console.WriteLine(e.Message);
-                //}
-
-                //driver.FindElement(By.Id("btnSTage1")).Click();
-                //driver.FindElement(By.Id("btnNext")).Click();
-
-                /*Script for EC NWM*/
-                driver.FindElement(By.Id("YesBtn")).Click();
-                driver.FindElement(By.Id("AcceptBtn")).Click();
-                driver.FindElement(By.Id("chkExaminerAgree")).Click();
-                driver.FindElement(By.Id("NextBtn")).Click();
-                driver.FindElement(By.Id("SignSSN")).SendKeys("3333");
-                driver.FindElement(By.Id("NextBtn")).Click();
+                driver.FindElement(By.Id("btnYes")).Click();
                 try
                 {
                     driver.FindElement(By.XPath("/html/body/div[1]/div[3]/div/button[1]/span")).Click();
@@ -108,65 +54,65 @@ namespace eSignUITest.Tests
                 {
                     Console.WriteLine(e.Message);
                 }
-                
-                var prevURL = driver.Url;
-                var wdWait = new WebDriverWait(driver, new TimeSpan(0, 0, 30));
-                var time = new DateTime();
-                var loadRequestTime = new TimeSpan();
 
-                for (var i = 0; i < 20; i++)
+                driver.FindElement(By.Id("btnSTage1")).Click();
+                driver.FindElement(By.Id("btnNext")).Click();
+
+                /*Script for EC NWM*/
+                //driver.FindElement(By.Id("YesBtn")).Click();
+                //driver.FindElement(By.Id("AcceptBtn")).Click();
+                //driver.FindElement(By.Id("chkExaminerAgree")).Click();
+                //driver.FindElement(By.Id("NextBtn")).Click();
+                //driver.FindElement(By.Id("SignSSN")).SendKeys("3333");
+                //driver.FindElement(By.Id("NextBtn")).Click();
+                //try
+                //{
+                //    driver.FindElement(By.XPath("/html/body/div[1]/div[3]/div/button[1]/span")).Click(); //TODO: Remove try catch. check and close "lock by other user" popup
+                //}
+                //catch (NoSuchElementException e)
+                //{                    
+                //}
+
+                do
                 {
                     for (var j = 0; j < 7; j++)
-                    {
-                        driver.FindElement(By.Id("buttonNext")).Click();
-                        time = DateTime.Now;
-                        wdWait.Until(o => !prevURL.Equals(driver.Url));
-                        loadRequestTime = DateTime.Now.Subtract(time);
-                        prevURL = driver.Url;
-
-                        if (minLoadRequestTime > loadRequestTime)
-                        {
-                            minLoadRequestTime = loadRequestTime;
-                        }
-                        if (maxLoadRequestTime < loadRequestTime)
-                        {
-                            maxLoadRequestTime = loadRequestTime;
-                        }
+                    {                        
+                        var requestDuration = PressElementAndWait(By.Id("buttonNext"));
+                        logs.Add(String.Format("Time: {0}, Request Duration: {1}", DateTime.Now, requestDuration));
                     }
 
+                    driver.FindElement(By.Id("buttonPrint")).Click();
+                    IJavaScriptExecutor jsExecuter = (driver as IJavaScriptExecutor);
+                    wdWait.Until(o => float.Parse(jsExecuter.ExecuteScript("return jQuery.active;").ToString()) == 0.0);
+                    driver.FindElement(By.ClassName("ui-dialog-titlebar-close")).Click();
+                    //class="ui-button ui-widget ui-state-default ui-corner-all ui-button-icon-only ui-dialog-titlebar-close"
+                    
                     for (var j = 0; j < 7; j++)
                     {
-                        driver.FindElement(By.Id("buttonPrev")).Click();
-                        time = DateTime.Now;
-                        wdWait.Until(o => !prevURL.Equals(driver.Url));
-                        loadRequestTime = DateTime.Now.Subtract(time);
-                        prevURL = driver.Url;
-
-                        if (minLoadRequestTime > loadRequestTime)
-                        {
-                            minLoadRequestTime = loadRequestTime;
-                        }
-                        if (maxLoadRequestTime < loadRequestTime)
-                        {
-                            maxLoadRequestTime = loadRequestTime;
-                            maxLoadRequestDateTime = DateTime.Now;
-                        }
+                        var requestDuration = PressElementAndWait(By.Id("buttonPrev"));
+                        logs.Add(String.Format("Time: {0}, Request Duration: {1}", DateTime.Now, requestDuration));
                     }
-                }
+                } while (DateTime.Now.Subtract(startDate) < testDuration); //do until test time doesn't expired
             }
             catch (Exception e)
             {
-                Console.WriteLine(e.Message);
+                var msg = String.Format("Error until execute {0}, ID: {1}, Message: {2}", testName, testId, e.Message);
+                Console.WriteLine(msg);
+                logs.Add(msg);
             }
-
-            Console.WriteLine(String.Format("Min request time: {0}, Max request time: {1}, At: {2}", minLoadRequestTime, maxLoadRequestTime, maxLoadRequestDateTime));
-            //WebDriverWait wait = new WebDriverWait(driver, new TimeSpan (0,0,15)); //use wait until some condition would be done
+            
             //wait.Until(ExpectedConditions.ElementExists(By.Id(loginCtrlId))).SendKeys("Admin");
         }
 
-        protected void EndTest()
+        private TimeSpan PressElementAndWait(By elementSelector)
         {
-            driver.Close();
+            var prevUrl = driver.Url;
+            var  requestStartTime = DateTime.Now;
+            driver.FindElement(elementSelector).Click();
+            
+            wdWait.Until(o => !prevUrl.Equals(driver.Url)); //TODO: need use other way for do this
+            return DateTime.Now.Subtract(requestStartTime);
         }
+
     }
 }
