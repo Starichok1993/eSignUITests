@@ -102,6 +102,8 @@ namespace LoadTestProject
                     
 
                     driver.Navigate().GoToUrl(StartPageUrl + "/ESignature/Step1?AppID=" + CaseGUID + "&SignID=Insured");
+                    requestDuration = PressElementAndWait(By.Name("CancelESign"));
+                    driver.Navigate().GoToUrl(StartPageUrl + "/ESignature/Step1?AppID=" + CaseGUID + "&SignID=Insured");
 
                     foreach (var buttonLocator in buttonLocatorList)
                     {
