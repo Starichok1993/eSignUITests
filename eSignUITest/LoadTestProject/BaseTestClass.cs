@@ -89,8 +89,9 @@ namespace LoadTestProject
 
         protected void EndTest()
         {
-            driver.Close();
             Counter.Decrement();
+            driver.Close();
+            
         }
     }
 }
